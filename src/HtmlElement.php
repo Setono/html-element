@@ -28,19 +28,16 @@ class HtmlElement implements NodeInterface
     private array $attributes = [];
 
     /** @var list<NodeInterface> */
-    private array $children;
+    private array $children = [];
 
-    private function __construct(private readonly string $tag, string|NodeInterface ...$children)
+    public function __construct(private readonly string $tag)
     {
         $this->void = in_array($this->tag, self::VOID_ELEMENTS, true);
-
-        // todo this is not beautiful...
-        $this->children = $this->append(...$children)->children();
     }
 
     public static function new(string $tag, string|NodeInterface ...$children): self
     {
-        return new self($tag, ...$children);
+        return (new self($tag))->append(...$children);
     }
 
     public function append(string|NodeInterface ...$children): self
@@ -107,6 +104,6 @@ class HtmlElement implements NodeInterface
      */
     public static function __callStatic(string $name, array $arguments): self
     {
-        return new self($name, ...$arguments);
+        return self::new($name, ...$arguments);
     }
 }
