@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd" bootstrap="vendor/autoload.php"
+         colors="true" verbose="true">
+    <coverage includeUncoveredFiles="true" processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src/</directory>
+        </include>
+    </coverage>
+    <testsuites>
+        <testsuite name="Codex Editor PHP Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="PIXEL_ID" value=""/>
+        <env name="TEST_EVENT_CODE" value=""/>
+        <env name="ACCESS_TOKEN" value=""/>
+
+        <!-- Here are the event specific parameters you need to set for the live test -->
+        <env name="URL" value=""/>
+        <env name="EMAIL" value=""/>
+    </php>
+</phpunit>
