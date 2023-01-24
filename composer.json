@@ -1,6 +1,6 @@
 {
-    "name": "setono/meta-conversions-api-php-sdk",
-    "description": "PHP library with basic objects and more for working with Facebook/Metas Conversions API",
+    "name": "setono/html-element",
+    "description": "PHP library to generate HTML elements",
     "license": "MIT",
     "type": "library",
     "authors": [

@@ -16,13 +16,13 @@ composer require setono/html-element
 
 TODO
 
-[ico-version]: https://poser.pugx.org/setono/meta-conversions-api-php-sdk/v/stable
-[ico-license]: https://poser.pugx.org/setono/meta-conversions-api-php-sdk/license
-[ico-github-actions]: https://github.com/Setono/meta-conversions-api-php-sdk/workflows/build/badge.svg
-[ico-code-coverage]: https://codecov.io/gh/Setono/meta-conversions-api-php-sdk/branch/master/graph/badge.svg
-[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2Fmeta-conversions-api-php-sdk%2Fmaster
+[ico-version]: https://poser.pugx.org/setono/html-element/v/stable
+[ico-license]: https://poser.pugx.org/setono/html-element/license
+[ico-github-actions]: https://github.com/Setono/html-element/workflows/build/badge.svg
+[ico-code-coverage]: https://codecov.io/gh/Setono/html-element/branch/master/graph/badge.svg
+[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2Fhtml-element%2Fmaster
 
-[link-packagist]: https://packagist.org/packages/setono/meta-conversions-api-php-sdk
-[link-github-actions]: https://github.com/Setono/meta-conversions-api-php-sdk/actions
-[link-code-coverage]: https://codecov.io/gh/Setono/meta-conversions-api-php-sdk
-[link-infection]: https://dashboard.stryker-mutator.io/reports/github.com/Setono/meta-conversions-api-php-sdk/master
+[link-packagist]: https://packagist.org/packages/setono/html-element
+[link-github-actions]: https://github.com/Setono/html-element/actions
+[link-code-coverage]: https://codecov.io/gh/Setono/html-element
+[link-infection]: https://dashboard.stryker-mutator.io/reports/github.com/Setono/html-element/master
