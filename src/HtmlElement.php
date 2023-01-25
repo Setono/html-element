@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Setono\HtmlElement;
 
 /**
+ * See https://developer.mozilla.org/en-US/docs/Web/HTML/Element for a list of all HTML elements
+ *
  * Document metadata
  * ---
  *
- * @method static self base(string|NodeInterface ...$children)
+ * @method static self base()
  * @method static self head(string|NodeInterface ...$children)
- * @method static self link(string|NodeInterface ...$children)
- * @method static self meta(string|NodeInterface ...$children)
+ * @method static self link()
+ * @method static self meta()
  * @method static self style(string|NodeInterface ...$children)
  * @method static self title(string|NodeInterface ...$children)
  *
@@ -45,7 +47,7 @@ namespace Setono\HtmlElement;
  * @method static self dt(string|NodeInterface ...$children)
  * @method static self figcaption(string|NodeInterface ...$children)
  * @method static self figure(string|NodeInterface ...$children)
- * @method static self hr(string|NodeInterface ...$children)
+ * @method static self hr()
  * @method static self li(string|NodeInterface ...$children)
  * @method static self menu(string|NodeInterface ...$children)
  * @method static self ol(string|NodeInterface ...$children)
@@ -60,7 +62,7 @@ namespace Setono\HtmlElement;
  * @method static self b(string|NodeInterface ...$children)
  * @method static self bdi(string|NodeInterface ...$children)
  * @method static self bdo(string|NodeInterface ...$children)
- * @method static self br(string|NodeInterface ...$children)
+ * @method static self br()
  * @method static self cite(string|NodeInterface ...$children)
  * @method static self code(string|NodeInterface ...$children)
  * @method static self data(string|NodeInterface ...$children)
@@ -83,25 +85,25 @@ namespace Setono\HtmlElement;
  * @method static self time(string|NodeInterface ...$children)
  * @method static self u(string|NodeInterface ...$children)
  * @method static self var(string|NodeInterface ...$children)
- * @method static self wbr(string|NodeInterface ...$children)
+ * @method static self wbr()
  *
  * Image and multimedia
  * ---
- * @method static self area(string|NodeInterface ...$children)
+ * @method static self area()
  * @method static self audio(string|NodeInterface ...$children)
- * @method static self img(string|NodeInterface ...$children)
+ * @method static self img()
  * @method static self map(string|NodeInterface ...$children)
- * @method static self track(string|NodeInterface ...$children)
+ * @method static self track()
  * @method static self video(string|NodeInterface ...$children)
  *
  * Embedded content
  * ---
- * @method static self embed(string|NodeInterface ...$children)
+ * @method static self embed()
  * @method static self iframe(string|NodeInterface ...$children)
  * @method static self object(string|NodeInterface ...$children)
  * @method static self picture(string|NodeInterface ...$children)
  * @method static self portal(string|NodeInterface ...$children)
- * @method static self source(string|NodeInterface ...$children)
+ * @method static self source()
  *
  * SVG and MathML
  * ---
@@ -122,7 +124,7 @@ namespace Setono\HtmlElement;
  * Table content
  * ---
  * @method static self caption(string|NodeInterface ...$children)
- * @method static self col(string|NodeInterface ...$children)
+ * @method static self col()
  * @method static self colgroup(string|NodeInterface ...$children)
  * @method static self table(string|NodeInterface ...$children)
  * @method static self tbody(string|NodeInterface ...$children)
@@ -138,7 +140,7 @@ namespace Setono\HtmlElement;
  * @method static self datalist(string|NodeInterface ...$children)
  * @method static self fieldset(string|NodeInterface ...$children)
  * @method static self form(string|NodeInterface ...$children)
- * @method static self input(string|NodeInterface ...$children)
+ * @method static self input()
  * @method static self label(string|NodeInterface ...$children)
  * @method static self legend(string|NodeInterface ...$children)
  * @method static self meter(string|NodeInterface ...$children)
