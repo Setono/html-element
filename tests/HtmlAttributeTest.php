@@ -57,10 +57,11 @@ final class HtmlAttributeTest extends TestCase
     /**
      * @test
      */
-    public function it_returns_name_and_values(): void
+    public function it_returns_name_and_values_and_value(): void
     {
         $attribute = (new HtmlAttribute('class', 'btn', 'btn-primary'));
         self::assertSame('class', $attribute->name());
+        self::assertSame('btn btn-primary', $attribute->value());
         self::assertSame(['btn', 'btn-primary'], $attribute->values());
     }
 
