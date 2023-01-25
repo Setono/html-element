@@ -15,12 +15,12 @@ namespace Setono\HtmlElement;
 class HtmlElement implements NodeInterface
 {
     // See https://developer.mozilla.org/en-US/docs/Glossary/Void_element
-    public const VOID_ELEMENTS = [
+    protected const VOID_ELEMENTS = [
         'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr',
     ];
 
     /**
-     * Is true if the HtmlElement has an end tag
+     * Is true if the HtmlElement does not have a closing tag, i.e. is a void element
      */
     private bool $void;
 
@@ -30,68 +30,73 @@ class HtmlElement implements NodeInterface
     /** @var list<NodeInterface> */
     private array $children = [];
 
-    public function __construct(private readonly string $tag)
+    public function __construct(private readonly string $tag, string|NodeInterface ...$children)
     {
         $this->void = in_array($this->tag, self::VOID_ELEMENTS, true);
-    }
 
-    public static function new(string $tag, string|NodeInterface ...$children): self
-    {
-        return (new self($tag))->append(...$children);
-    }
-
-    public function append(string|NodeInterface ...$children): self
-    {
-        if ($this->void) {
+        if ($this->void && [] !== $children) {
             throw new \RuntimeException(sprintf('You are trying to append an element to a void HTML tag (%s)', $this->tag));
         }
 
-        $new = clone $this;
-
         foreach ($children as $child) {
-            if (is_string($child)) {
-                $child = new Text($child);
-            }
-
-            $new->children[] = $child;
+            $this->children[] = is_string($child) ? new Text($child) : $child;
         }
-
-        return $new;
     }
 
-    public function withAttribute(string $name, int|float|bool|string|\Stringable ...$values): self
+    public function withAttribute(string|HtmlAttribute $attribute, int|float|bool|string|\Stringable ...$values): self
     {
         $new = clone $this;
+
+        $name = $attribute instanceof HtmlAttribute ? $attribute->name() : $attribute;
+
         if (!isset($new->attributes[$name])) {
-            $new->attributes[$name] = HtmlAttribute::new($name);
+            $new->attributes[$name] = new HtmlAttribute($name);
         }
 
-        $new->attributes[$name] = $new->attributes[$name]->withValues(...$values);
+        if ($attribute instanceof HtmlAttribute) {
+            $new->attributes[$name] = $new->attributes[$name]->withValue(...$attribute->values());
+        }
+
+        $new->attributes[$name] = $new->attributes[$name]->withValue(...$values);
 
         return $new;
     }
 
-    /**
-     * @return list<NodeInterface>
-     */
-    public function children(): array
+    public function withClass(int|float|bool|string|\Stringable ...$classes): self
     {
-        return $this->children;
+        return $this->withAttribute('class', ...$classes);
     }
 
     public function render(): string
     {
-        $html = sprintf(
+        return $this->renderStart() . $this->renderChildren() . $this->renderEnd();
+    }
+
+    public function renderStart(): string
+    {
+        return sprintf(
             '<%s%s>',
             $this->tag,
             [] === $this->attributes ? '' : ' ' . implode(' ', $this->attributes),
         );
+    }
 
+    public function renderChildren(): string
+    {
         if ($this->void) {
-            return $html;
+            return '';
         }
 
-        return sprintf('%s%s</%s>', $html, implode('', $this->children), $this->tag);
+        return implode('', $this->children);
+    }
+
+    public function renderEnd(): string
+    {
+        if ($this->void) {
+            return '';
+        }
+
+        return sprintf('</%s>', $this->tag);
     }
 
     public function __toString(): string
@@ -104,6 +109,10 @@ class HtmlElement implements NodeInterface
      */
     public static function __callStatic(string $name, array $arguments): self
     {
-        return self::new($name, ...$arguments);
+        if (static::class !== self::class) {
+            throw new \RuntimeException(sprintf('It is only possible to use the magic element methods on the root class %s', self::class));
+        }
+
+        return new self($name, ...$arguments);
     }
 }

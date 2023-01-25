@@ -29,8 +29,44 @@ final class HtmlElementTest extends TestCase
         $div = HtmlElement::div(
             HtmlElement::p('Lorem ipsum...'),
             HtmlElement::p('... dolor sit amet...'),
-        )->withAttribute('class', 'btn', 'btn-primary');
+        )->withAttribute('class', 'btn', 'btn-primary')
+            ->withAttribute(new HtmlAttribute('id', 'submit'))
+            ->withClass('btn-lg')
+        ;
 
-        self::assertSame('<div class="btn btn-primary"><p>Lorem ipsum...</p><p>... dolor sit amet...</p></div>', $div->render());
+        self::assertSame('<div class="btn btn-primary btn-lg" id="submit"><p>Lorem ipsum...</p><p>... dolor sit amet...</p></div>', $div->render());
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_extendable(): void
+    {
+        $image = ImageElement::new()->withAttribute('class', 'image', 'rounded')->withAttribute('src', 'https://example.com/images/foobar.jpg');
+
+        self::assertSame('<img class="image rounded" src="https://example.com/images/foobar.jpg">', $image->render());
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_exception_if_you_try_to_instantiate_with_static_magic_method_from_child(): void
+    {
+        $this->expectException(\RuntimeException::class);
+
+        ImageElement::div();
+    }
+}
+
+final class ImageElement extends HtmlElement
+{
+    public function __construct(string|NodeInterface ...$children)
+    {
+        parent::__construct('img', ...$children);
+    }
+
+    public static function new(string|NodeInterface ...$children): self
+    {
+        return new self(...$children);
     }
 }

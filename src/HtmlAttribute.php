@@ -12,16 +12,14 @@ class HtmlAttribute implements \Stringable
     /** @var list<string> */
     private array $values = [];
 
-    private function __construct(private readonly string $name)
+    public function __construct(private readonly string $name, int|float|bool|string|\Stringable ...$values)
     {
+        foreach ($values as $value) {
+            $this->values[] = (string) $value;
+        }
     }
 
-    public static function new(string $name): self
-    {
-        return new self($name);
-    }
-
-    public function withValues(int|float|bool|string|\Stringable ...$values): self
+    public function withValue(int|float|bool|string|\Stringable ...$values): self
     {
         $new = clone $this;
 
@@ -44,6 +42,14 @@ class HtmlAttribute implements \Stringable
         }
 
         return implode(' ', $this->values);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function values(): array
+    {
+        return $this->values;
     }
 
     public function render(): string
