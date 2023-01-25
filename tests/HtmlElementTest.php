@@ -84,6 +84,7 @@ final class HtmlElementTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
+        /** @psalm-suppress TooManyArguments */
         HtmlElement::img(HtmlElement::div());
     }
 }
