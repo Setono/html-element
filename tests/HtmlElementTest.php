@@ -16,9 +16,12 @@ final class HtmlElementTest extends TestCase
      */
     public function it_renders_a_single_element(): void
     {
-        $div = HtmlElement::div();
+        $div = HtmlElement::div('test');
 
-        self::assertSame('<div></div>', $div->render());
+        self::assertSame('<div>test</div>', $div->render());
+        self::assertSame('<div>', $div->renderStart());
+        self::assertSame('test', $div->renderChildren());
+        self::assertSame('</div>', $div->renderEnd());
     }
 
     /**
