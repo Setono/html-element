@@ -24,6 +24,15 @@ final class HtmlAttributeTest extends TestCase
     /**
      * @test
      */
+    public function it_renders_with_no_value(): void
+    {
+        $attribute = new HtmlAttribute('required');
+        self::assertSame('required', $attribute->render());
+    }
+
+    /**
+     * @test
+     */
     public function it_maintains_unique_values(): void
     {
         $attribute = (new HtmlAttribute('class', 'btn', 'btn'))->withValue('btn');
@@ -38,5 +47,15 @@ final class HtmlAttributeTest extends TestCase
         $attribute = (new HtmlAttribute('class', 'btn', 'btn-primary'));
         self::assertSame('class', $attribute->name());
         self::assertSame(['btn', 'btn-primary'], $attribute->values());
+    }
+
+    /**
+     * @test
+     */
+    public function it_is_immutable(): void
+    {
+        $original = new HtmlAttribute('class', 'btn');
+        $new = $original->withValue('btn-primary');
+        self::assertNotSame($original, $new);
     }
 }

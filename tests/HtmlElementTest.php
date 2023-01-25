@@ -46,6 +46,20 @@ final class HtmlElementTest extends TestCase
     /**
      * @test
      */
+    public function it_is_immutable(): void
+    {
+        $original = HtmlElement::div();
+
+        $new = $original->withAttribute('class', 'container');
+        self::assertNotSame($original, $new);
+
+        $new = $original->withClass('container');
+        self::assertNotSame($original, $new);
+    }
+
+    /**
+     * @test
+     */
     public function it_is_extendable(): void
     {
         $image = ImageElement::new()->withAttribute('class', 'image', 'rounded')->withAttribute('src', 'https://example.com/images/foobar.jpg');
