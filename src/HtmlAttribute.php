@@ -15,6 +15,10 @@ class HtmlAttribute implements \Stringable
     public function __construct(private readonly string $name, int|float|bool|string|\Stringable ...$values)
     {
         foreach ($values as $value) {
+            if (in_array($value, $this->values, true)) {
+                continue;
+            }
+
             $this->values[] = (string) $value;
         }
     }
@@ -24,6 +28,10 @@ class HtmlAttribute implements \Stringable
         $new = clone $this;
 
         foreach ($values as $value) {
+            if (in_array($value, $new->values, true)) {
+                continue;
+            }
+
             $new->values[] = (string) $value;
         }
 
