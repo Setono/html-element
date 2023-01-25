@@ -33,6 +33,21 @@ final class HtmlAttributeTest extends TestCase
     /**
      * @test
      */
+    public function it_allows_stringable_object_as_value_input(): void
+    {
+        $obj = new class() implements \Stringable {
+            public function __toString(): string
+            {
+                return 'btn';
+            }
+        };
+        $attribute = new HtmlAttribute('class', $obj);
+        self::assertSame('class="btn"', $attribute->render());
+    }
+
+    /**
+     * @test
+     */
     public function it_maintains_unique_values(): void
     {
         $attribute = (new HtmlAttribute('class', 'btn', 'btn'))->withValue('btn');
