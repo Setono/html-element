@@ -18,6 +18,7 @@ final class HtmlAttributeTest extends TestCase
     {
         $attribute = new HtmlAttribute('class', 'btn btn-primary');
         self::assertSame('class="btn btn-primary"', $attribute->render());
+        self::assertSame('class="btn btn-primary"', (string) $attribute);
     }
 
     /**
@@ -27,5 +28,15 @@ final class HtmlAttributeTest extends TestCase
     {
         $attribute = (new HtmlAttribute('class', 'btn', 'btn'))->withValue('btn');
         self::assertSame('class="btn"', $attribute->render());
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_name_and_values(): void
+    {
+        $attribute = (new HtmlAttribute('class', 'btn', 'btn-primary'));
+        self::assertSame('class', $attribute->name());
+        self::assertSame(['btn', 'btn-primary'], $attribute->values());
     }
 }
