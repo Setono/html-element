@@ -34,7 +34,10 @@ final class HtmlElementTest extends TestCase
             ->withClass('btn-lg')
         ;
 
-        self::assertSame('<div class="btn btn-primary btn-lg" id="submit"><p>Lorem ipsum...</p><p>... dolor sit amet...</p></div>', $div->render());
+        $expected = '<div class="btn btn-primary btn-lg" id="submit"><p>Lorem ipsum...</p><p>... dolor sit amet...</p></div>';
+
+        self::assertSame($expected, $div->render());
+        self::assertSame($expected, (string) $div);
     }
 
     /**
@@ -55,6 +58,16 @@ final class HtmlElementTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         ImageElement::div();
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_exception_if_you_try_to_instantiate_with_children_on_a_void_element(): void
+    {
+        $this->expectException(\RuntimeException::class);
+
+        HtmlElement::img(HtmlElement::div());
     }
 }
 
