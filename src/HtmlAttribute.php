@@ -4,36 +4,34 @@ declare(strict_types=1);
 
 namespace Setono\HtmlElement;
 
-/**
- * Intentionally not final so that you can easily extend the class and create presets of your desired HtmlAttributes
- */
-class HtmlAttribute implements \Stringable
+final class HtmlAttribute implements \Stringable
 {
-    /** @var list<string> */
-    private array $values = [];
+    private ?string $value = null;
 
-    public function __construct(private readonly string $name, int|float|bool|string|\Stringable ...$values)
+    public function __construct(private readonly string $name, int|float|bool|string|\Stringable $value = null)
     {
-        foreach ($values as $value) {
-            if (in_array($value, $this->values, true)) {
-                continue;
-            }
-
-            $this->values[] = (string) $value;
+        if (null !== $value) {
+            $this->value = self::castToString($value);
         }
     }
 
-    public function withValue(int|float|bool|string|\Stringable ...$values): self
+    public function withValue(int|float|bool|string|\Stringable $value = null, bool $overwrite = true): self
     {
         $new = clone $this;
+        $value = self::castToString($value);
+        $new->value = $overwrite ? $value : ((string) $new->value . ' ' . $value);
 
-        foreach ($values as $value) {
-            if (in_array($value, $new->values, true)) {
-                continue;
-            }
+        return $new;
+    }
 
-            $new->values[] = (string) $value;
+    public function removeValue(string $value): self
+    {
+        if (!$this->hasValue()) {
+            return $this;
         }
+
+        $new = clone $this;
+        $new->value = trim(str_replace([$value, '  '], ['', ' '], (string) $new->value));
 
         return $new;
     }
@@ -45,27 +43,24 @@ class HtmlAttribute implements \Stringable
 
     public function value(): ?string
     {
-        if ([] === $this->values) {
-            return null;
-        }
-
-        return implode(' ', $this->values);
+        return $this->value;
     }
 
     /**
-     * @return list<string>
+     * @psalm-assert-if-true !null $this->value()
+     * @psalm-assert-if-true non-empty-string $this->value()
+     * @psalm-assert-if-true !null $this->value
+     * @psalm-assert-if-true non-empty-string $this->value
      */
-    public function values(): array
+    public function hasValue(): bool
     {
-        return $this->values;
+        return null !== $this->value && '' !== $this->value;
     }
 
     public function render(): string
     {
-        $value = $this->value();
-
-        if (null !== $value) {
-            return sprintf('%s="%s"', $this->name, $value);
+        if ($this->hasValue()) {
+            return sprintf('%s="%s"', $this->name, $this->value);
         }
 
         return $this->name;
@@ -74,5 +69,14 @@ class HtmlAttribute implements \Stringable
     public function __toString(): string
     {
         return $this->render();
+    }
+
+    private static function castToString(null|int|float|bool|string|\Stringable $value): string
+    {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        return (string) $value;
     }
 }
