@@ -57,6 +57,18 @@ final class HtmlElementTest extends TestCase
     /**
      * @test
      */
+    public function it_removes_class(): void
+    {
+        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary')->removeClass('btn');
+
+        $expected = '<div class="btn-primary"></div>';
+
+        self::assertSame($expected, $div->render());
+    }
+
+    /**
+     * @test
+     */
     public function it_answers_has_attribute(): void
     {
         $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary');
