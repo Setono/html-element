@@ -86,5 +86,6 @@ final class HtmlAttributeTest extends TestCase
         yield ['class1 class2', 'class1', 'class2'];
         yield ['class1 class2', 'class2', 'class1'];
         yield ['class1 class2 class3', 'class2', 'class1 class3'];
+        yield ['class1 class2 class3', 'class', 'class1 class2 class3'];
     }
 }

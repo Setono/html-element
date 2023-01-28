@@ -31,7 +31,12 @@ final class HtmlAttribute implements \Stringable
         }
 
         $new = clone $this;
-        $new->value = trim(str_replace([$value, '  '], ['', ' '], (string) $new->value));
+
+        // Read the regex as:
+        // (^|\s): Either match the start of the string or a white space character
+        // $value: This is the value we want to remove
+        // (?!\S): This translates to: (^|\s)$value must not be followed by anything else but a white space character
+        $new->value = trim(preg_replace("/(^|\s)$value(?!\S)/", '', (string) $new->value));
 
         return $new;
     }
