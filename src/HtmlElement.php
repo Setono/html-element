@@ -298,10 +298,6 @@ final class HtmlElement implements NodeInterface
      */
     public static function __callStatic(string $name, array $arguments): self
     {
-        if (static::class !== self::class) {
-            throw new \RuntimeException(sprintf('It is only possible to use the magic element methods on the root class %s', self::class));
-        }
-
         return new self($name, ...$arguments);
     }
 }

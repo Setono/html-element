@@ -46,6 +46,50 @@ final class HtmlElementTest extends TestCase
     /**
      * @test
      */
+    public function it_renders_empty_strings_when_applicable(): void
+    {
+        $br = HtmlElement::br();
+
+        self::assertSame('', $br->renderChildren());
+        self::assertSame('', $br->renderEnd());
+    }
+
+    /**
+     * @test
+     */
+    public function it_answers_has_attribute(): void
+    {
+        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary');
+
+        self::assertTrue($div->hasAttribute('class'));
+        self::assertFalse($div->hasAttribute('id'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_gets_an_attribute(): void
+    {
+        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary');
+
+        $attribute = $div->getAttribute('class');
+        self::assertSame('btn btn-primary', $attribute->value());
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_exception_if_you_try_to_get_attribute_that_does_not_exist(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $div = HtmlElement::div();
+
+        $div->getAttribute('class');
+    }
+
+    /**
+     * @test
+     */
     public function it_is_immutable(): void
     {
         $original = HtmlElement::div();
