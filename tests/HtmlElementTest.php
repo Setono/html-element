@@ -59,7 +59,7 @@ final class HtmlElementTest extends TestCase
      */
     public function it_removes_class(): void
     {
-        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary')->removeClass('btn');
+        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary')->withoutClass('btn');
 
         $expected = '<div class="btn-primary"></div>';
 
@@ -111,6 +111,10 @@ final class HtmlElementTest extends TestCase
 
         $new = $original->withClass('container');
         self::assertNotSame($original, $new);
+
+        $new = $original->withClass('container');
+        $new2 = $new->withoutClass('container');
+        self::assertNotSame($new, $new2);
     }
 
     /**

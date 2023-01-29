@@ -68,13 +68,48 @@ final class HtmlAttributeTest extends TestCase
 
     /**
      * @test
+     */
+    public function it_overwrites_attribute_values_by_default(): void
+    {
+        $original = new HtmlAttribute('class', 'btn');
+        $new = $original->withValue('btn-primary');
+        self::assertSame('btn-primary', $new->value());
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_to_keep_existing_value(): void
+    {
+        $original = new HtmlAttribute('class', 'btn');
+        $new = $original->withValue('btn-primary', false);
+        self::assertSame('btn btn-primary', $new->value());
+    }
+
+    /**
+     * @test
+     */
+    public function it_casts_booleans(): void
+    {
+        $attribute = new HtmlAttribute('required', true);
+        self::assertSame('true', $attribute->value());
+
+        $attribute = new HtmlAttribute('required', false);
+        self::assertSame('false', $attribute->value());
+    }
+
+    /**
+     * @test
      *
      * @dataProvider getValues
      */
     public function it_removes_values(string $value, string $remove, string $expected): void
     {
-        $attribute = (new HtmlAttribute('class', $value))->removeValue($remove);
-        self::assertSame($expected, $attribute->value());
+        $attribute = new HtmlAttribute('class', $value);
+        $newAttribute = $attribute->withoutValue($remove);
+
+        self::assertNotSame($attribute, $newAttribute);
+        self::assertSame($expected, $newAttribute->value());
     }
 
     /**

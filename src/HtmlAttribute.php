@@ -24,7 +24,7 @@ final class HtmlAttribute implements \Stringable
         return $new;
     }
 
-    public function removeValue(string $value): self
+    public function withoutValue(string $value): self
     {
         if (!$this->hasValue()) {
             return $this;

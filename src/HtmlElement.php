@@ -239,7 +239,7 @@ final class HtmlElement implements NodeInterface
         return $this->withAttribute('class', $class, false);
     }
 
-    public function removeClass(string $class): self
+    public function withoutClass(string $class): self
     {
         if (!$this->hasAttribute('class')) {
             return $this;
@@ -251,7 +251,7 @@ final class HtmlElement implements NodeInterface
         }
 
         $new = clone $this;
-        $new->attributes['class'] = $attribute->removeValue($class);
+        $new->attributes['class'] = $attribute->withoutValue($class);
 
         return $new;
     }
