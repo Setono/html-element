@@ -91,6 +91,28 @@ final class HtmlElementTest extends TestCase
     /**
      * @test
      */
+    public function it_does_not_do_anything_if_the_element_does_not_have_the_given_attribute(): void
+    {
+        $original = HtmlElement::div();
+
+        $new = $original->withoutClass('class');
+        self::assertSame($original, $new);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_do_anything_if_the_element_has_the_attribute_but_the_attribute_does_not_have_a_value(): void
+    {
+        $original = HtmlElement::div()->withAttribute('class');
+
+        $new = $original->withoutClass('btn');
+        self::assertSame($original, $new);
+    }
+
+    /**
+     * @test
+     */
     public function it_throws_an_exception_if_you_try_to_get_attribute_that_does_not_exist(): void
     {
         $this->expectException(\InvalidArgumentException::class);
