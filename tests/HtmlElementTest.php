@@ -57,6 +57,17 @@ final class HtmlElementTest extends TestCase
     /**
      * @test
      */
+    public function it_adds_class(): void
+    {
+        $div = HtmlElement::div();
+        $div = $div->withClass('container');
+
+        self::assertSame('<div class="container"></div>', $div->render());
+    }
+
+    /**
+     * @test
+     */
     public function it_removes_class(): void
     {
         $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary')->withoutClass('btn');

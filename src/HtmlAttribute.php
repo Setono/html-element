@@ -19,7 +19,7 @@ final class HtmlAttribute implements \Stringable
     {
         $new = clone $this;
         $value = self::castToString($value);
-        $new->value = $overwrite ? $value : ((string) $new->value . ' ' . $value);
+        $new->value = $overwrite ? $value : trim((string) $new->value . ' ' . $value);
 
         return $new;
     }
