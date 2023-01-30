@@ -48,21 +48,12 @@ final class HtmlAttributeTest extends TestCase
     /**
      * @test
      */
-    public function it_maintains_unique_values(): void
+    public function it_returns_name_and_value(): void
     {
-        $attribute = (new HtmlAttribute('class', 'btn', 'btn'))->withValue('btn');
-        self::assertSame('class="btn"', $attribute->render());
-    }
-
-    /**
-     * @test
-     */
-    public function it_returns_name_and_values_and_value(): void
-    {
-        $attribute = (new HtmlAttribute('class', 'btn', 'btn-primary'));
+        $attribute = (new HtmlAttribute('class', 'btn'));
+        self::assertTrue($attribute->hasValue());
         self::assertSame('class', $attribute->name());
-        self::assertSame('btn btn-primary', $attribute->value());
-        self::assertSame(['btn', 'btn-primary'], $attribute->values());
+        self::assertSame('btn', $attribute->value());
     }
 
     /**
@@ -73,5 +64,63 @@ final class HtmlAttributeTest extends TestCase
         $original = new HtmlAttribute('class', 'btn');
         $new = $original->withValue('btn-primary');
         self::assertNotSame($original, $new);
+    }
+
+    /**
+     * @test
+     */
+    public function it_overwrites_attribute_values_by_default(): void
+    {
+        $original = new HtmlAttribute('class', 'btn');
+        $new = $original->withValue('btn-primary');
+        self::assertSame('btn-primary', $new->value());
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_to_keep_existing_value(): void
+    {
+        $original = new HtmlAttribute('class', 'btn');
+        $new = $original->withValue('btn-primary', false);
+        self::assertSame('btn btn-primary', $new->value());
+    }
+
+    /**
+     * @test
+     */
+    public function it_casts_booleans(): void
+    {
+        $attribute = new HtmlAttribute('required', true);
+        self::assertSame('true', $attribute->value());
+
+        $attribute = new HtmlAttribute('required', false);
+        self::assertSame('false', $attribute->value());
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider getValues
+     */
+    public function it_removes_values(string $value, string $remove, string $expected): void
+    {
+        $attribute = new HtmlAttribute('class', $value);
+        $newAttribute = $attribute->withoutValue($remove);
+
+        self::assertNotSame($attribute, $newAttribute);
+        self::assertSame($expected, $newAttribute->value());
+    }
+
+    /**
+     * @return \Generator<array-key, array<array-key, string>>
+     */
+    public function getValues(): \Generator
+    {
+        yield ['class1', 'class1', ''];
+        yield ['class1 class2', 'class1', 'class2'];
+        yield ['class1 class2', 'class2', 'class1'];
+        yield ['class1 class2 class3', 'class2', 'class1 class3'];
+        yield ['class1 class2 class3', 'class', 'class1 class2 class3'];
     }
 }

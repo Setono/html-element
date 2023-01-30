@@ -161,33 +161,35 @@ namespace Setono\HtmlElement;
  * ---
  * @method static self slot(string|NodeInterface ...$children)
  * @method static self template(string|NodeInterface ...$children)
- *
- * Intentionally not final so that you can easily extend the class and create presets of your desired HtmlElements
  */
-class HtmlElement implements NodeInterface
+final class HtmlElement implements NodeInterface
 {
     // See https://developer.mozilla.org/en-US/docs/Glossary/Void_element
-    protected const VOID_ELEMENTS = [
+    private const VOID_ELEMENTS = [
         'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr',
     ];
 
     /**
      * Is true if the HtmlElement does not have a closing tag, i.e. is a void element
      */
-    protected bool $void;
+    private bool $void;
 
     /** @var array<string, HtmlAttribute> */
-    protected array $attributes = [];
+    private array $attributes = [];
 
     /** @var list<NodeInterface> */
-    protected array $children = [];
+    private array $children = [];
 
     public function __construct(private readonly string $tag, string|NodeInterface ...$children)
     {
         $this->void = in_array($this->tag, self::VOID_ELEMENTS, true);
 
         if ($this->void && [] !== $children) {
-            throw new \RuntimeException(sprintf('You are trying to append an element to a void HTML tag (%s)', $this->tag));
+            throw new \RuntimeException(sprintf(
+                'You are trying to append an element to an element with no closing tag (%s). Here is the list of tags with no closing tag: [%s]',
+                $this->tag,
+                implode(', ', self::VOID_ELEMENTS),
+            ));
         }
 
         foreach ($children as $child) {
@@ -195,28 +197,63 @@ class HtmlElement implements NodeInterface
         }
     }
 
-    public function withAttribute(string|HtmlAttribute $attribute, int|float|bool|string|\Stringable ...$values): self
+    /**
+     * @psalm-assert-if-true HtmlAttribute $this->attributes[$attribute]
+     */
+    public function hasAttribute(string $attribute): bool
     {
+        return isset($this->attributes[$attribute]);
+    }
+
+    public function getAttribute(string $attribute): HtmlAttribute
+    {
+        if (!$this->hasAttribute($attribute)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The HtmlElement does not have an attribute named "%s". You can check the existence of an attribute with %s::hasAttribute()',
+                $attribute,
+                self::class,
+            ));
+        }
+
+        return $this->attributes[$attribute];
+    }
+
+    public function withAttribute(
+        string $attribute,
+        int|float|bool|string|\Stringable $value = null,
+        bool $overwrite = true,
+    ): self {
         $new = clone $this;
 
-        $name = $attribute instanceof HtmlAttribute ? $attribute->name() : $attribute;
-
-        if (!isset($new->attributes[$name])) {
-            $new->attributes[$name] = new HtmlAttribute($name);
+        if (!isset($new->attributes[$attribute])) {
+            $new->attributes[$attribute] = new HtmlAttribute($attribute);
         }
 
-        if ($attribute instanceof HtmlAttribute) {
-            $new->attributes[$name] = $new->attributes[$name]->withValue(...$attribute->values());
-        }
-
-        $new->attributes[$name] = $new->attributes[$name]->withValue(...$values);
+        $new->attributes[$attribute] = $new->attributes[$attribute]->withValue($value, $overwrite);
 
         return $new;
     }
 
-    public function withClass(int|float|bool|string|\Stringable ...$classes): self
+    public function withClass(string $class): self
     {
-        return $this->withAttribute('class', ...$classes);
+        return $this->withAttribute('class', $class, false);
+    }
+
+    public function withoutClass(string $class): self
+    {
+        if (!$this->hasAttribute('class')) {
+            return $this;
+        }
+
+        $attribute = $this->getAttribute('class');
+        if (!$attribute->hasValue()) {
+            return $this;
+        }
+
+        $new = clone $this;
+        $new->attributes['class'] = $attribute->withoutValue($class);
+
+        return $new;
     }
 
     public function render(): string
@@ -261,10 +298,6 @@ class HtmlElement implements NodeInterface
      */
     public static function __callStatic(string $name, array $arguments): self
     {
-        if (static::class !== self::class) {
-            throw new \RuntimeException(sprintf('It is only possible to use the magic element methods on the root class %s', self::class));
-        }
-
         return new self($name, ...$arguments);
     }
 }

@@ -32,8 +32,8 @@ final class HtmlElementTest extends TestCase
         $div = HtmlElement::div(
             HtmlElement::p('Lorem ipsum...'),
             HtmlElement::p('... dolor sit amet...'),
-        )->withAttribute('class', 'btn', 'btn-primary')
-            ->withAttribute(new HtmlAttribute('id', 'submit'))
+        )->withAttribute('class', 'btn btn-primary')
+            ->withAttribute('id', 'submit')
             ->withClass('btn-lg')
         ;
 
@@ -41,6 +41,62 @@ final class HtmlElementTest extends TestCase
 
         self::assertSame($expected, $div->render());
         self::assertSame($expected, (string) $div);
+    }
+
+    /**
+     * @test
+     */
+    public function it_renders_empty_strings_when_applicable(): void
+    {
+        $br = HtmlElement::br();
+
+        self::assertSame('', $br->renderChildren());
+        self::assertSame('', $br->renderEnd());
+    }
+
+    /**
+     * @test
+     */
+    public function it_removes_class(): void
+    {
+        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary')->withoutClass('btn');
+
+        $expected = '<div class="btn-primary"></div>';
+
+        self::assertSame($expected, $div->render());
+    }
+
+    /**
+     * @test
+     */
+    public function it_answers_has_attribute(): void
+    {
+        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary');
+
+        self::assertTrue($div->hasAttribute('class'));
+        self::assertFalse($div->hasAttribute('id'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_gets_an_attribute(): void
+    {
+        $div = HtmlElement::div()->withAttribute('class', 'btn btn-primary');
+
+        $attribute = $div->getAttribute('class');
+        self::assertSame('btn btn-primary', $attribute->value());
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_exception_if_you_try_to_get_attribute_that_does_not_exist(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $div = HtmlElement::div();
+
+        $div->getAttribute('class');
     }
 
     /**
@@ -55,26 +111,10 @@ final class HtmlElementTest extends TestCase
 
         $new = $original->withClass('container');
         self::assertNotSame($original, $new);
-    }
 
-    /**
-     * @test
-     */
-    public function it_is_extendable(): void
-    {
-        $image = ImageElement::new()->withAttribute('class', 'image', 'rounded')->withAttribute('src', 'https://example.com/images/foobar.jpg');
-
-        self::assertSame('<img class="image rounded" src="https://example.com/images/foobar.jpg">', $image->render());
-    }
-
-    /**
-     * @test
-     */
-    public function it_throws_exception_if_you_try_to_instantiate_with_static_magic_method_from_child(): void
-    {
-        $this->expectException(\RuntimeException::class);
-
-        ImageElement::div();
+        $new = $original->withClass('container');
+        $new2 = $new->withoutClass('container');
+        self::assertNotSame($new, $new2);
     }
 
     /**
@@ -86,18 +126,5 @@ final class HtmlElementTest extends TestCase
 
         /** @psalm-suppress TooManyArguments */
         HtmlElement::img(HtmlElement::div());
-    }
-}
-
-final class ImageElement extends HtmlElement
-{
-    public function __construct(string|NodeInterface ...$children)
-    {
-        parent::__construct('img', ...$children);
-    }
-
-    public static function new(string|NodeInterface ...$children): self
-    {
-        return new self(...$children);
     }
 }
