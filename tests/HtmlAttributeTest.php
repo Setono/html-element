@@ -100,6 +100,16 @@ final class HtmlAttributeTest extends TestCase
 
     /**
      * @test
+     */
+    public function it_does_nothing_if_you_try_to_remove_a_value_but_the_value_is_empty(): void
+    {
+        $attribute = new HtmlAttribute('required');
+        $newAttribute = $attribute->withoutValue('test');
+        self::assertSame($attribute, $newAttribute);
+    }
+
+    /**
+     * @test
      *
      * @dataProvider getValues
      */
