@@ -180,7 +180,7 @@ final class HtmlElement implements NodeInterface
     /** @var list<NodeInterface> */
     private array $children = [];
 
-    public function __construct(private readonly string $tag, string|NodeInterface ...$children)
+    public function __construct(private string $tag, string|NodeInterface ...$children)
     {
         $this->void = in_array($this->tag, self::VOID_ELEMENTS, true);
 
@@ -195,6 +195,20 @@ final class HtmlElement implements NodeInterface
         foreach ($children as $child) {
             $this->children[] = is_string($child) ? new Text($child) : $child;
         }
+    }
+
+    public function withTag(string $tag): self
+    {
+        $void = in_array($tag, self::VOID_ELEMENTS, true);
+        if ($void && [] !== $this->children) {
+            throw new \RuntimeException('You are trying to convert a non void tag into a void tag. This is only possible if the existing tag has no children.');
+        }
+
+        $new = clone $this;
+        $new->void = $void;
+        $new->tag = $tag;
+
+        return $new;
     }
 
     /**

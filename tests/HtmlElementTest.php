@@ -57,6 +57,17 @@ final class HtmlElementTest extends TestCase
     /**
      * @test
      */
+    public function it_changes_the_tag(): void
+    {
+        $div = HtmlElement::div();
+        $h2 = $div->withTag('h2');
+
+        self::assertSame('<h2></h2>', $h2->render());
+    }
+
+    /**
+     * @test
+     */
     public function it_adds_class(): void
     {
         $div = HtmlElement::div();
@@ -138,6 +149,9 @@ final class HtmlElementTest extends TestCase
     public function it_is_immutable(): void
     {
         $original = HtmlElement::div();
+
+        $new = $original->withTag('h2');
+        self::assertNotSame($original, $new);
 
         $new = $original->withAttribute('class', 'container');
         self::assertNotSame($original, $new);
