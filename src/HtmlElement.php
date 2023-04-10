@@ -253,6 +253,23 @@ final class HtmlElement implements NodeInterface
         return $this->withAttribute('class', $class, false);
     }
 
+    /**
+     * @param list<string> $classes
+     */
+    public function withClasses(array $classes): self
+    {
+        if ([] === $classes) {
+            return $this;
+        }
+
+        $new = clone $this;
+        foreach ($classes as $class) {
+            $new = $new->withClass($class);
+        }
+
+        return $new;
+    }
+
     public function withoutClass(string $class): self
     {
         if (!$this->hasAttribute('class')) {
