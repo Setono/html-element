@@ -16,7 +16,18 @@ composer require setono/html-element
 
 ## Usage
 
-TODO
+```php
+use Setono\HtmlElement\HtmlElement;
+
+echo (new HtmlElement('p', 'Lorem ipsum'))->render(); // output: <p>Lorem ipsum</p>
+
+echo HtmlElement::p('Lorem ipsum')->render(); // output: <p>Lorem ipsum</p>
+
+$outer = HtmlElement::div()->withClass('container');
+$inner = HtmlElement::div('Layout');
+
+echo $outer->append($inner)->render(); // output: <div class="container"><div>Layout</div></div>
+```
 
 [ico-version]: https://poser.pugx.org/setono/html-element/v/stable
 [ico-license]: https://poser.pugx.org/setono/html-element/license
