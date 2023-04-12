@@ -267,6 +267,10 @@ final class HtmlElement implements NodeInterface
 
     public function withClass(string $class): self
     {
+        if ('' === $class) {
+            return $this;
+        }
+
         return $this->withAttribute('class', $class, false);
     }
 
