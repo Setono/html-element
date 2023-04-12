@@ -140,6 +140,7 @@ final class HtmlElementTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $div = HtmlElement::div();
 
+        /** @psalm-suppress UnusedMethodCall */
         $div->getAttribute('class');
     }
 

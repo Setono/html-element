@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\HtmlElement;
 
+/**
+ * @psalm-immutable
+ */
 final class HtmlAttribute implements \Stringable
 {
     private ?string $value = null;
@@ -76,6 +79,9 @@ final class HtmlAttribute implements \Stringable
         return $this->render();
     }
 
+    /**
+     * @psalm-pure
+     */
     private static function castToString(null|int|float|bool|string|\Stringable $value): string
     {
         if (is_bool($value)) {
