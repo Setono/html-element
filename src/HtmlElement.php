@@ -279,12 +279,7 @@ final class HtmlElement implements NodeInterface
             return $this;
         }
 
-        $new = clone $this;
-        foreach ($classes as $class) {
-            $new = $new->withClass($class);
-        }
-
-        return $new;
+        return (clone $this)->withClass(implode(' ', $classes));
     }
 
     public function withoutClass(string $class): self
