@@ -174,4 +174,29 @@ final class HtmlElementTest extends TestCase
         /** @psalm-suppress TooManyArguments */
         HtmlElement::img(HtmlElement::div());
     }
+
+    /**
+     * @test
+     */
+    public function it_appends(): void
+    {
+        $div = HtmlElement::div();
+        $div = $div->append(
+            HtmlElement::div('inner'),
+            HtmlElement::div('inner2'),
+            'inner3',
+        );
+
+        self::assertSame('<div><div>inner</div><div>inner2</div>inner3</div>', $div->render());
+    }
+
+    /**
+     * @test
+     */
+    public function it_ignores_empty_append_argument(): void
+    {
+        $original = HtmlElement::div();
+        $new = $original->append();
+        self::assertSame($original, $new);
+    }
 }

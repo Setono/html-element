@@ -161,6 +161,8 @@ namespace Setono\HtmlElement;
  * ---
  * @method static self slot(string|NodeInterface ...$children)
  * @method static self template(string|NodeInterface ...$children)
+ *
+ * @psalm-immutable
  */
 final class HtmlElement implements NodeInterface
 {
@@ -207,6 +209,21 @@ final class HtmlElement implements NodeInterface
         $new = clone $this;
         $new->void = $void;
         $new->tag = $tag;
+
+        return $new;
+    }
+
+    public function append(string|NodeInterface ...$children): self
+    {
+        if ([] === $children) {
+            return $this;
+        }
+
+        $new = clone $this;
+
+        foreach ($children as $child) {
+            $new->children[] = is_string($child) ? new Text($child) : $child;
+        }
 
         return $new;
     }
