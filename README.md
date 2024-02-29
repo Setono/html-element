@@ -6,8 +6,6 @@
 [![Code Coverage][ico-code-coverage]][link-code-coverage]
 [![Mutation testing][ico-infection]][link-infection]
 
-This is a work in progress... but it will be absolutely wonderful <3
-
 ## Installation
 
 ```bash
